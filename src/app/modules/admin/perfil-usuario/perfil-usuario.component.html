@@ -1,0 +1,114 @@
+<div class="w-full flex flex-col">
+
+    <div class="flex items-start justify-between w-full bg-card p-4 md:p-8">
+        <div class="min-w-0">
+            <div class="text-sm text-secondary">Usuarios</div>
+                <h2 class="mt-1 truncate text-3xl font-extrabold leading-7 tracking-tight sm:leading-10 md:text-4xl">
+                    Perfil de usuario
+                </h2>
+                <div class="mt-1 text-sm text-secondary">Gestiona la información del usuario</div>
+            </div>
+        <div class="hidden sm:flex items-center gap-2">
+    </div>
+    </div>
+
+    <div class="w-full mx-auto bg-card dark:bg-default border rounded p-4 flex justify-center">
+
+        <ng-container *ngIf="!cargando; else loadingTpl">
+            <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-8/12">
+
+                <!-- Nombres y apellidos -->
+                <div>
+                <label class="block text-sm">Primer nombre</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="primerNombre" />
+                </div>
+                <div>
+                <label class="block text-sm">Segundo nombre</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="segundoNombre" />
+                </div>
+                <div>
+                <label class="block text-sm">Tercer nombre</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="tercerNombre" />
+                </div>
+                <div>
+                <label class="block text-sm">Primer apellido</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="primerApellido" />
+                </div>
+                <div>
+                <label class="block text-sm">Segundo apellido</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="segundoApellido" />
+                </div>
+
+                <!-- Datos personales -->
+                <div>
+                <label class="block text-sm">Fecha de nacimiento</label>
+                <input type="date" class="mt-1 w-full border rounded px-3 py-2" formControlName="fechaNacimiento" />
+                </div>
+                <div>
+                <label class="block text-sm">Género</label>
+                <select class="mt-1 w-full border rounded px-3 py-2" formControlName="genero">
+                    <option value="">Seleccione...</option>
+                    <option [value]="'M'">Masculino</option>
+                    <option [value]="'F'">Femenino</option>
+                    <option [value]="'O'">Otro</option>
+                </select>
+                </div>
+                <div>
+                <label class="block text-sm">Tipo de documento</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="tipoDocumento" />
+                </div>
+                <div>
+                <label class="block text-sm">Número de documento</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="numeroDocumento" />
+                </div>
+                <div class="md:col-span-2">
+                <label class="block text-sm">Dirección</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="direccionDetalle" />
+                </div>
+
+                <div>
+                <label class="block text-sm">Departamento</label>
+                <select class="mt-1 w-full border rounded px-3 py-2"
+                        formControlName="departamentoId"
+                        (change)="onDepartamentoChange($event.target.value)">
+                    <option value="">Seleccione...</option>
+                    <option *ngFor="let d of departamentos" [value]="d.departamentoId">{{ d.nombreDepartamento }}</option>
+                </select>
+                </div>
+                <div>
+                <label class="block text-sm">Municipio</label>
+                <select class="mt-1 w-full border rounded px-3 py-2"
+                        formControlName="municipioId">
+                    <option value="">Seleccione...</option>
+                    <option *ngFor="let m of municipios" [value]="m.municipioId">{{ m.nombreMunicipio }}</option>
+                </select>
+                </div>
+                <div>
+                <label class="block text-sm">Locación ID</label>
+                <input type="number" class="mt-1 w-full border rounded px-3 py-2" formControlName="locacionId" />
+                </div>
+                <div>
+                <label class="block text-sm">Teléfono</label>
+                <input type="text" class="mt-1 w-full border rounded px-3 py-2" formControlName="telefono" />
+                </div>
+
+                <!-- Credenciales -->
+                <div>
+                <label class="block text-sm">Contraseña</label>
+                <input type="password" class="mt-1 w-full border rounded px-3 py-2" formControlName="contrasena" placeholder="••••••" />
+                </div>
+
+                <div class="md:col-span-2 flex items-center gap-3 mt-2">
+                <button type="button" class="px-4 py-2 rounded bg-primary-600 text-white disabled:opacity-60"
+                        [disabled]="guardando || cargando || form.invalid"
+                        (click)="guardar()">Guardar</button>
+                <button type="button" class="px-4 py-2 rounded border" (click)="volver()">Cancelar</button>
+                </div>
+            </form>
+        </ng-container>
+
+        <ng-template #loadingTpl class="w-full">
+            <div class="p-6 text-center text-gray-500">Cargando perfil...</div>
+        </ng-template>
+    </div>
+</div>

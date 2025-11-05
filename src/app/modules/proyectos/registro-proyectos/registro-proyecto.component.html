@@ -1,0 +1,101 @@
+<div class="flex min-w-0 flex-auto flex-col">
+    <!-- Header (oculto dentro de diálogo) -->
+    <div *ngIf="!isDialog"
+        class="bg-card flex flex-0 flex-col border-b p-6 dark:bg-transparent sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8"
+    >
+        <div class="min-w-0 flex-1">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+                <div>
+                    <a class="whitespace-nowrap text-primary-500">
+                        Registro de Proyecto
+                    </a>
+                </div>
+                <div class="ml-1 flex items-center whitespace-nowrap">
+                    <mat-icon class="text-secondary icon-size-5" [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                    <a class="ml-1 text-primary-500">Forms</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="truncate text-3xl font-extrabold leading-7 tracking-tight sm:leading-10 md:text-4xl">
+                    Registro de Proyecto
+                </h2>
+                <div class="text-sm text-secondary mt-1">Completa la información básica del proyecto</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex p-2 sm:px-2 justify-center w-full items-center">
+        <div [ngClass]="isDialog ? 'w-full' : 'w-full sm:w-3/5 mx-auto'">
+            <form
+                [formGroup]="proyectoForm"
+                (ngSubmit)="onSubmit()"
+                class="bg-card mt-8 flex flex-col overflow-hidden rounded-2xl p-8 pb-4 shadow"
+            >
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Nombre -->
+                    <mat-form-field [ngClass]="formFieldHelpers" class="col-span-2">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="nombre" placeholder="Nombre del proyecto" />
+                        <mat-error *ngIf="proyectoForm.get('nombre')?.hasError('required')">Campo requerido</mat-error>
+                        <mat-error *ngIf="proyectoForm.get('nombre')?.hasError('maxlength')">Máximo 150 caracteres</mat-error>
+                    </mat-form-field>
+
+                    <!-- Descripción -->
+                    <mat-form-field [ngClass]="formFieldHelpers" class="col-span-2">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput rows="4" formControlName="descripcion" placeholder="Describe brevemente el proyecto" [attr.maxlength]="1000"></textarea>
+                        <mat-hint align="end">{{ (proyectoForm.get('descripcion')?.value?.length || 0) }}/1000</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Estado del proyecto -->
+                    <mat-form-field [ngClass]="formFieldHelpers" class="col-span-2">
+                        <mat-label>Estado del proyecto</mat-label>
+                        <mat-select formControlName="estadoId" placeholder="Selecciona un estado">
+                            <mat-option *ngFor="let e of estados" [value]="e.estadoId">
+                                {{ e.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="proyectoForm.get('estadoId')?.hasError('required')">Campo requerido</mat-error>
+                    </mat-form-field>
+
+                    <!-- Fechas -->
+                    <mat-form-field [ngClass]="formFieldHelpers" class="gt-xs:pr-3 flex-auto">
+                        <mat-label>Fecha de inicio</mat-label>
+                        <input matInput type="date" formControlName="fechaInicio" />
+                        <mat-datepicker #pickerIni></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field [ngClass]="formFieldHelpers" class="gt-xs:pl-3 flex-auto">
+                        <mat-label>Fecha final</mat-label>
+                        <input matInput type="date" formControlName="fechaFin" [attr.min]="fechaFinMin || null" />
+                        <mat-datepicker #pickerFin></mat-datepicker>
+                        <mat-error *ngIf="proyectoForm.get('fechaFin')?.hasError('rangoInvalido')">La fecha final no puede ser menor a la fecha de inicio</mat-error>
+                        <mat-error *ngIf="proyectoForm.get('fechaFin')?.hasError('invalidDate')">Fecha inválida</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="mt-4 flex items-center justify-end gap-3">
+                    <button mat-stroked-button color="primary" type="button" (click)="proyectoForm.reset()" [disabled]="guardando" matTooltip="Limpiar formulario">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-path'"></mat-icon>
+                        <span class="ml-2">Limpiar</span>
+                    </button>
+                    <button *ngIf="isDialog" mat-stroked-button color="warn" type="button" (click)="cancel()" [disabled]="guardando" matTooltip="Cerrar">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                        <span class="ml-2">Cancelar</span>
+                    </button>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="proyectoForm.invalid || guardando" matTooltip="Guardar proyecto">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                        <span class="ml-2 flex items-center">
+                            <ng-container *ngIf="!guardando; else saving">Guardar</ng-container>
+                            <ng-template #saving>
+                                Guardando…
+                            </ng-template>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

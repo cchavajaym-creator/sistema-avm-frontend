@@ -1,0 +1,56 @@
+<div class="flex flex-col w-full">
+    <div class="flex justify-between items-center gap-2">
+        <p class="text-xl font-semibold leading-none">Entregas Relalizadas</p>
+        <button mat-flat-button color="primary" [routerLink]="['./entregas/nueva']">
+            <mat-icon [svgIcon]="'heroicons_outline:plus'" class="icon-size-5"></mat-icon>
+            <span class="ml-2">Registrar Entrega</span>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="mt-4">
+        <ng-container *ngIf="(this._proyectos.eventosEntrega$ | async) as eventos">
+            <table mat-table [dataSource]="eventos" class="w-full mat-elevation-z1">
+                <!-- Nombre -->
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                    <td mat-cell *matCellDef="let e"> {{ e.nombre }} </td>
+                </ng-container>
+
+                <!-- Fecha -->
+                <ng-container matColumnDef="fechaEvento">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let e"> {{ e.fechaEvento | date:'short' }} </td>
+                </ng-container>
+
+                <!-- Lugar -->
+                <ng-container matColumnDef="lugar">
+                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
+                    <td mat-cell *matCellDef="let e"> {{ e.lugar }} </td>
+                </ng-container>
+
+                <!-- Observaciones -->
+                <ng-container matColumnDef="observaciones">
+                    <th mat-header-cell *matHeaderCellDef> Observaciones </th>
+                    <td mat-cell *matCellDef="let e"> {{ e.observaciones || '-' }} </td>
+                </ng-container>
+
+                <!-- Acciones -->
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let e">
+                        <a mat-icon-button [routerLink]="['./entregas', e.eventoId]" matTooltip="Ver detalle">
+                            <mat-icon [svgIcon]="'heroicons_outline:eye'" class="icon-size-5"></mat-icon>
+                        </a>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="p-4 text-secondary" *ngIf="!eventos || eventos.length === 0">
+                No hay entregas registradas.
+            </div>
+        </ng-container>
+    </div>
+</div>

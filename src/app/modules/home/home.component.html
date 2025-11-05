@@ -1,0 +1,121 @@
+<div class="flex flex-col gap-8 w-full px-6 md:px-10 py-6 dark:bg-default bg-card">
+    <!-- Encabezado -->
+    @if (usuarioLogueado$ | async; as user) {
+        <div class="flex items-start justify-between">
+            <div class="min-w-0">
+                <div class="text-sm text-secondary">Inicio</div>
+                <h2 class="mt-1 truncate text-3xl font-extrabold leading-7 tracking-tight sm:leading-10 md:text-4xl">
+                    Bienvenido(a) {{ user?.username }}
+                </h2>
+                <div class="mt-1 text-sm text-secondary">Resumen de tu actividad y accesos rápidos</div>
+            </div>
+            
+        </div>
+    }
+
+    <mat-divider></mat-divider>
+
+    <!-- Resumen -->
+    @if(proyectosUser$ | async; as proyectos){
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Totales basados en indicadores -->
+            <app-metric-card
+                class="flex-1 min-w-0"
+                [wrapperClass]="'bg-blue-50 text-blue-800 dark:bg-white dark:bg-opacity-5 dark:text-blue-400'"
+                [title]="'Beneficiarios'"
+                [icon]="'group'"
+                [value]="totalBeneficiariosIndicadores"
+                [subtitle]="'Total de Beneficiarios'"
+            ></app-metric-card>
+
+            <app-metric-card
+                class="flex-1 min-w-0"
+                [wrapperClass]="'bg-amber-50 text-amber-800 dark:bg-white dark:bg-opacity-5 dark:text-amber-400'"
+                [title]="'Proyectos'"
+                [svgIcon]="'heroicons_outline:folder'"
+                [value]="totalProyectosIndicadores"
+                [subtitle]="'Total de Proyectos Activos'"
+            ></app-metric-card>
+
+            <app-metric-card
+                class="flex-1 min-w-0"
+                [wrapperClass]="'bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500'"
+                [title]="'Mis Proyectos'"
+                [svgIcon]="'heroicons_outline:newspaper'"
+                [value]="proyectos.totalProyectos"
+                [subtitle]="'Total'"
+            ></app-metric-card>
+
+             <app-metric-card
+                class="flex-1 min-w-0"
+                [wrapperClass]="'bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400'"
+                [title]="'Proyecto (selección de gráfica)'"
+                [svgIcon]="'heroicons_outline:folder'"
+                [value]="selectedProyectoTotal"
+                [subtitle]="selectedProyectoNombre"
+            ></app-metric-card>
+        </div>
+
+    }
+
+    <!-- Indicadores de beneficiarios -->
+    <div class="w-full">
+        <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold">Indicadores de beneficiarios</h3>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            <div class="lg:col-span-4">
+                <div class="bg-card rounded-2xl p-4 border border-black/5 dark:border-white/5 h-full text-secondary">
+                    <div class="text-sm text-secondary">Distribución por género</div>
+                    <apx-chart
+                        [series]="generoSeries"
+                        [chart]="generoChart"
+                        [labels]="generoLabels"
+                        [dataLabels]="generoDataLabels"
+                        [legend]="generoLegend"
+                        [title]="generoTitle"
+                        [responsive]="generoResponsive"
+                    ></apx-chart>
+                </div>
+            </div>
+            <div class="lg:col-span-8">
+                <div class="bg-card rounded-2xl p-4 border border-black/5 dark:border-white/5 h-full">
+                    <div class="text-sm text-secondary">Beneficiarios activos por proyecto</div>
+                    <apx-chart
+                        [series]="activosSeries"
+                        [chart]="activosChart"
+                        [xaxis]="activosXAxis"
+                        [dataLabels]="activosDataLabels"
+                        [plotOptions]="activosPlotOptions"
+                        [tooltip]="activosTooltip"
+                        [grid]="activosGrid"
+                    ></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proyectos del usuario -->
+    @if (proyectosUser$ | async; as data) {
+        @if (data?.proyectos?.length) {
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Tus Proyectos</h3>
+                    <a mat-button color="primary" [routerLink]="['/mis-proyectos']">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:rectangle-stack'"></mat-icon>
+                        <span class="ml-1">Ver todos</span>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
+                    @for (p of data.proyectos; track p.proyectoId) {
+                        <div class="h-full">
+                            <app-proyecto-card [proyecto]="p"></app-proyecto-card>
+                        </div>
+                    }
+                </div>
+            </div>
+        } @else {
+            <div class="text-sm text-gray-500">No tienes proyectos asignados.</div>
+        }
+    }
+</div>

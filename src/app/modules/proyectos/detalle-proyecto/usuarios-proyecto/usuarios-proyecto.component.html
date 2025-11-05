@@ -1,0 +1,70 @@
+<!-- nueva vista listado de usuarios (activa) -->
+<fuse-card class="w-full">
+    <div class="p-6 w-full" *ngIf="!cargando; else cargandoTpl">
+        <h3 class="text-lg font-semibold mb-3">Usuarios asignados</h3>
+
+        <div class="w-full flex items-center justify-center gap-2">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:user'"
+                    matPrefix
+                ></mat-icon>
+                <mat-select
+                    [(ngModel)]="usuarioIdSeleccionado"
+                    [placeholder]="'Seleccionar usuario'"
+                >
+                    @for (u of usuarios; track u.usuarioId) {
+                        <mat-option [value]="u.usuarioId">
+                            {{ u.nombreUsuario }} ({{ u.correoElectronico }})
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <button mat-icon-button matSuffix (click)="agregarUsuario()" [disabled]="!usuarioIdSeleccionado">
+                <mat-icon
+                    class="icon-size-12"
+                    [svgIcon]="'heroicons_solid:plus-circle'"
+                ></mat-icon>
+            </button>
+        </div>
+
+        <div class="mt-8 flex flex-col divide-y border-b border-t w-full">
+            @for (usuario of usuariosAsignados; track trackByFn($index, usuario)) {
+                <div class="flex flex-col py-6 sm:flex-row sm:items-center">
+                    <div class="flex items-center">
+                        <div
+                            class="flex h-10 w-10 flex-0 items-center justify-center overflow-hidden rounded-full"
+                        >
+
+                        <div
+                            class="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-lg uppercase text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                        >
+                            {{ usuario.persona?.primerNombre?.charAt(0) }}
+                        </div>
+
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-medium">{{ usuario.nombreUsuario  }}</div>
+                            <div class="text-secondary">{{ usuario.correoElectronico }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center sm:ml-auto sm:mt-0">
+                        <div class="order-1 sm:order-2 sm:ml-3">
+                            <button mat-icon-button (click)="removerUsuario(usuario)">
+                                <mat-icon
+                                    class="text-hint"
+                                    [svgIcon]="'heroicons_outline:trash'"
+                                ></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</fuse-card>
+
+<ng-template #cargandoTpl>
+    <div class="p-6 text-secondary">Cargando usuarios…</div>
+</ng-template>

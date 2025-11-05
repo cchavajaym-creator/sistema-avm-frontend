@@ -1,0 +1,27 @@
+<div class="p-4 w-full">
+  <h3 class="text-base font-semibold mb-4">Editar rol de usuario</h3>
+
+  <div class="space-y-4">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Usuario</mat-label>
+      <mat-select [(ngModel)]="seleccionadoUsuarioId" [disabled]="usuarioReadOnly">
+        <mat-option *ngFor="let u of usuarios" [value]="u.usuarioId">{{ u.nombreUsuario }} — {{ u.correoElectronico }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="seleccionadoRolId">
+        <mat-option *ngFor="let r of roles" [value]="r.rolId">{{ r.nombreRol }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="mt-6 flex justify-end gap-2">
+    <button class="px-3 py-1.5 text-sm rounded bg-gray-200 hover:bg-gray-300" (click)="cerrar()" [disabled]="guardando">Cancelar</button>
+    <button class="px-3 py-1.5 text-sm rounded bg-primary-600 text-white hover:bg-primary-700"
+            (click)="guardar()" [disabled]="guardando || !seleccionadoUsuarioId || !seleccionadoRolId">
+      Guardar
+    </button>
+  </div>
+</div>

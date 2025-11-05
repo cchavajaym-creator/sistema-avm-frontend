@@ -1,0 +1,18 @@
+<div class="p-4">
+  <div class="flex items-center justify-between mb-2">
+    <h3 class="text-lg font-bold">Confirmar incorporación</h3>
+    <button mat-icon-button (click)="cancelar()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+  <div class="text-sm space-y-1">
+    <div><span class="font-semibold">Nombre:</span> {{ data.beneficiario.persona.primerNombre }} {{ data.beneficiario.persona.primerApellido }}</div>
+    <div><span class="font-semibold">Municipio:</span> {{ data.beneficiario.persona.municipio?.nombreMunicipio || '-' }}</div>
+    <div><span class="font-semibold">Fecha de incorporación:</span> {{ data.payload.fechaIncorporacion }}</div>
+  </div>
+  <div class="mt-4 flex justify-end gap-2">
+    <button mat-stroked-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="confirmar()">Confirmar</button>
+  </div>
+</div>
+

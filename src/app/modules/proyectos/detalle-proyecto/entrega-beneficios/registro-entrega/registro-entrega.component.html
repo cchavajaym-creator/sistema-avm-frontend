@@ -1,0 +1,45 @@
+<div class="flex flex-col h-full w-full">
+  <div class="flex items-center justify-between p-4 border-b">
+    <div class="text-lg font-semibold">Registrar Entrega</div>
+    <button mat-icon-button (click)="cancelar()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+
+  <form class="p-4 flex flex-col gap-4" [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del evento</mat-label>
+      <input matInput formControlName="nombre" />
+      <mat-error *ngIf="form.get('nombre')?.hasError('required')">Requerido</mat-error>
+      <mat-error *ngIf="form.get('nombre')?.hasError('maxlength')">Máximo 200 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha y hora</mat-label>
+      <input matInput type="datetime-local" formControlName="fechaEvento" />
+      <mat-error *ngIf="form.get('fechaEvento')?.hasError('required')">Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lugar</mat-label>
+      <input matInput formControlName="lugar" />
+      <mat-error *ngIf="form.get('lugar')?.hasError('required')">Requerido</mat-error>
+      <mat-error *ngIf="form.get('lugar')?.hasError('maxlength')">Máximo 200 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Observaciones</mat-label>
+      <textarea matInput rows="3" formControlName="observaciones"></textarea>
+      <mat-error *ngIf="form.get('observaciones')?.hasError('maxlength')">Máximo 500 caracteres</mat-error>
+    </mat-form-field>
+
+    <div class="flex gap-2 mt-2">
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || guardando">
+        <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+        <span class="ml-2">Guardar</span>
+      </button>
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>
+

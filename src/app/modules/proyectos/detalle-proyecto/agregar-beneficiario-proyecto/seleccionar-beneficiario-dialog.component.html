@@ -1,0 +1,78 @@
+<div class="flex flex-col gap-4 w-full p-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold">Seleccionar Beneficiario</h2>
+    <button mat-icon-button (click)="cerrar()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+
+  <div class="p-4 overflow-auto w-full">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-2 mb-4">
+      <mat-form-field appearance="outline" class="fuse-mat-dense">
+        <mat-label>Nombre Beneficiario</mat-label>
+        <input matInput placeholder="Buscar por nombre" [(ngModel)]="q" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="fuse-mat-dense">
+        <mat-label>Número de documento</mat-label>
+        <input matInput placeholder="Documento" [(ngModel)]="numeroDocumento" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="fuse-mat-dense">
+        <mat-label>Departamento</mat-label>
+        <mat-select [(ngModel)]="departamentoId" (selectionChange)="onDepartamentoChange($event.value)">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option *ngFor="let d of departamentos" [value]="d.departamentoId">{{ d.nombreDepartamento }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="fuse-mat-dense">
+        <mat-label>Municipio</mat-label>
+        <mat-select [(ngModel)]="municipioId">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option *ngFor="let m of municipios" [value]="m.municipioId">{{ m.nombreMunicipio }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="flex items-center gap-2 mt-2 md:mt-0">
+        <button mat-stroked-button color="primary" (click)="buscar()">
+          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+        </button>
+        <button mat-stroked-button color="warn" (click)="limpiar()">Limpiar</button>
+      </div>
+    </div>
+
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-2 pr-4">ID</th>
+          <th class="py-2 pr-4">Nombre</th>
+          <th class="py-2 pr-4">Municipio</th>
+          <th class="py-2 pr-4">Documento</th>
+          <th class="py-2 pr-4">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of beneficiarios" class="border-b last:border-b-0">
+          <td class="py-2 pr-4">{{ b.beneficiarioId }}</td>
+          <td class="py-2 pr-4">{{ nombreCompleto(b) }}</td>
+          <td class="py-2 pr-4">{{ b.persona.municipio?.nombreMunicipio || '-' }}</td>
+          <td class="py-2 pr-4">{{ b.persona.tipoDocumento }} {{ b.persona.numeroDocumento }}</td>
+          <td class="py-2 pr-4">
+            <button mat-stroked-button color="primary" (click)="seleccionar(b)">Seleccionar</button>
+          </td>
+        </tr>
+        <tr *ngIf="!cargando && beneficiarios.length === 0">
+          <td class="py-3 text-center text-hint" colspan="4">Sin beneficiarios.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <mat-paginator
+    [length]="total"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    (page)="pageChange($event)">
+  </mat-paginator>
+</div>

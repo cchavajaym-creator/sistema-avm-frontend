@@ -1,0 +1,63 @@
+<div class="w-full">
+  <h2 class="text-lg font-semibold mb-4">Formulario de registro de Usuario</h2>
+  <hr />
+
+  <form #form="ngForm" (ngSubmit)="form.valid && registrarUsuario()" class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+    <!-- Nombres -->
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Primer nombre</mat-label>
+      <input matInput [(ngModel)]="usuario.primerNombre" name="primerNombre" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Segundo nombre</mat-label>
+      <input matInput [(ngModel)]="usuario.segundoNombre" name="segundoNombre" />
+    </mat-form-field>
+
+    <!-- Apellidos -->
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Primer apellido</mat-label>
+      <input matInput [(ngModel)]="usuario.primerApellido" name="primerApellido" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Segundo apellido</mat-label>
+      <input matInput [(ngModel)]="usuario.segundoApellido" name="segundoApellido" />
+    </mat-form-field>
+
+    <!-- Género -->
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Género</mat-label>
+      <mat-select [(ngModel)]="usuario.genero" name="genero" required>
+        <mat-option value="F">Femenino</mat-option>
+        <mat-option value="M">Masculino</mat-option>
+        <mat-option value="O">Otro</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Acceso -->
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput type="email" [(ngModel)]="usuario.correoElectronico" name="correoElectronico" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="usuario.contrasena" name="contrasena" required />
+    </mat-form-field>
+
+    <!-- Rol -->
+    <mat-form-field appearance="fill" class="fuse-mat-dense">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="usuario.rolId" name="rolId" required>
+        <mat-option *ngFor="let r of roles" [value]="r.rolId">{{ r.nombreRol }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Acciones -->
+    <div class="md:col-span-2 flex justify-end gap-2 mt-2">
+      <button mat-button type="button" (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Registrar</button>
+    </div>
+  </form>
+</div>

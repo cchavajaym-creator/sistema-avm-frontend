@@ -1,0 +1,215 @@
+<div class="flex min-w-0 flex-auto flex-col bg-card dark:bg-default">
+    <!-- Header -->
+    <div class=" flex flex-col px-8">
+        <div class="min-w-0 flex-1">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+                <div>
+                    <a class="whitespace-nowrap text-primary-500"
+                        >Registro de Beneficiario</a
+                    >
+                </div>
+                <div class="ml-1 flex items-center whitespace-nowrap">
+                    <mat-icon
+                        class="text-secondary icon-size-5"
+                        [svgIcon]="'heroicons_mini:chevron-right'"
+                    ></mat-icon>
+                    <a class="ml-1 text-primary-500">Forms</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2
+                    class="truncate text-3xl font-extrabold leading-7 tracking-tight sm:leading-10 md:text-4xl"
+                >
+                    Registro de Beneficiario
+                </h2>
+            </div>
+        </div>
+
+        <div class="flex-auto p-2 sm:px-2 justify-center">
+
+            <form
+                [formGroup]="beneficiarioForm"
+                (ngSubmit)="onSubmit()"
+                class="bg-card mt-8 flex flex-col overflow-hidden pb-4"
+            >
+                <mat-horizontal-stepper [linear]="false">
+                    <mat-step label="Datos personales">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                <mat-label>Primer Nombre</mat-label>
+                                <input matInput formControlName="primerNombre" />
+                                <mat-error *ngIf="beneficiarioForm.get('primerNombre')?.hasError('required')">Campo requerido</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                <mat-label>Segundo Nombre</mat-label>
+                                <input matInput formControlName="segundoNombre" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                <mat-label>Tercer Nombre</mat-label>
+                                <input matInput formControlName="tercerNombre" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                <mat-label>Primer Apellido</mat-label>
+                                <input matInput formControlName="primerApellido" />
+                                <mat-error *ngIf="beneficiarioForm.get('primerApellido')?.hasError('required')">Campo requerido</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                <mat-label>Segundo Apellido</mat-label>
+                                <input matInput formControlName="segundoApellido" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                <mat-label>Fecha de Nacimiento</mat-label>
+                                <input matInput type="date" placeholder="aaaa-mm-dd" formControlName="fechaNacimiento" />
+                                <mat-datepicker #pickerNacimiento></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                                <mat-label>Género</mat-label>
+                                <mat-select formControlName="genero">
+                                    <mat-option *ngFor="let g of generos" [value]="g.value">{{ g.label }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button mat-flat-button color="primary" matStepperNext type="button">
+                                Siguiente
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step label="Documento y dirección">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+                                <mat-label>Tipo de Documento</mat-label>
+                                <mat-select formControlName="tipoDocumento">
+                                    <mat-option value="DPI">DPI</mat-option>
+                                    <mat-option value="PASAPORTE">Pasaporte</mat-option>
+                                    <mat-option value="OTRO">Otro</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
+                                <mat-label>Numero de Documento de Identificación</mat-label>
+                                <input matInput formControlName="numeroDocumento" />
+                                <mat-error *ngIf="beneficiarioForm.get('numeroDocumento')?.hasError('required')">Campo requerido</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                                <mat-label>Número de telefono</mat-label>
+                                <input matInput formControlName="telefono" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="lg:col-span-2 flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:home'"></mat-icon>
+                                <mat-label>Dirección</mat-label>
+                                <input matInput formControlName="direccionDetalle" />
+                            </mat-form-field>
+
+                            <!-- País (solo lectura) -->
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:globe-alt'"></mat-icon>
+                                <mat-label>País</mat-label>
+                                <input matInput [value]="paisNombre" readonly />
+                            </mat-form-field>
+
+                            <!-- Departamento -->
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:map'"></mat-icon>
+                                <mat-label>Departamento</mat-label>
+                                <mat-select formControlName="departamentoId" (selectionChange)="onDepartamentoChange($event.value)">
+                                    <mat-option *ngFor="let d of departamentos" [value]="d.departamentoId">{{ d.nombreDepartamento }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <!-- Municipio -->
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:map'"></mat-icon>
+                                <mat-label>Municipio</mat-label>
+                                <mat-select formControlName="municipioId" (selectionChange)="onMunicipioChange($event.value)">
+                                    <mat-option *ngFor="let m of municipios" [value]="m.municipioId">{{ m.nombreMunicipio }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <!-- Locación -->
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
+                                <mat-label>Aldea / Sector</mat-label>
+                                <mat-select formControlName="locacionId" (selectionChange)="onLocacionSelection($event.value)">
+                                    <mat-option *ngFor="let l of locaciones" [value]="l.locacionId">{{ l.nombreLocacion }}</mat-option>
+                                    <mat-option [value]="'AGREGAR'">
+                                        Agregar nueva locación…
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button mat-stroked-button color="primary" matStepperPrevious type="button">
+                                Anterior
+                            </button>
+                            <button mat-flat-button color="primary" matStepperNext type="button">
+                                Siguiente
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step label="Coordenadas">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:globe-alt'"></mat-icon>
+                                <mat-label>Latitud</mat-label>
+                                <input matInput formControlName="latitud" [readonly]="true" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" [ngClass]="formFieldHelpers" class="flex-auto">
+                                <mat-icon matPrefix class="icon-size-5 text-secondary" [svgIcon]="'heroicons_outline:globe-alt'"></mat-icon>
+                                <mat-label>Longitud</mat-label>
+                                <input matInput formControlName="longitud" [readonly]="true" />
+                            </mat-form-field>
+
+                            <div class="col-span-full flex items-center gap-3">
+                                <button mat-stroked-button color="primary" type="button" (click)="obtenerUbicacion()" [disabled]="obteniendoUbicacion">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
+                                    <span class="ml-2">Usar mi ubicación</span>
+                                </button>
+                                <button mat-stroked-button color="warn" type="button" (click)="limpiarCoordenadas()">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                </button>
+                                <span class="text-sm text-hint" *ngIf="obteniendoUbicacion">Obteniendo ubicación…</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex items-center justify-between gap-3">
+                            <button mat-stroked-button color="primary" matStepperPrevious type="button">
+                                Anterior
+                            </button>
+                            <div class="flex items-center gap-3">
+                                <button mat-flat-button color="primary" type="submit" [disabled]="beneficiarioForm.invalid || guardando">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                    <span class="ml-2">{{ guardando ? 'Guardando…' : 'Guardar' }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </form>
+
+        </div>
+    </div>
+</div>

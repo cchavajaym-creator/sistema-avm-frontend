@@ -1,0 +1,137 @@
+<mat-drawer-container class="flex-auto h-full bg-card">
+  <mat-drawer-content>
+<div class="flex flex-col gap-6 w-full p-4 bg-card">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div class="min-w-0">
+      <div class="text-sm text-gray-500">Perfil del beneficiario</div>
+      <h2 class="text-2xl font-bold truncate flex items-center gap-2 flex-wrap">
+        @if (!cargando && data) {
+          <span>{{ nombreCompleto(data.persona) || 'Sin nombre' }}</span>
+          @if (esMenorDeEdad(data.persona?.fechaNacimiento)) {
+            <app-tag label="Menor de edad" color="warn"></app-tag>
+          }
+        } @else {
+          Cargando...
+        }
+      </h2>
+      @if (!cargando && data?.persona?.tipoDocumento) {
+        <div class="text-sm text-gray-500 mt-1">
+          {{ data.persona.tipoDocumento }} {{ data.persona.numeroDocumento }}
+        </div>
+      }
+    </div>
+    <div class="flex gap-2">
+      <a mat-stroked-button color="primary" [routerLink]="['/beneficiarios']">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-left'" aria-hidden="true"></mat-icon>
+        <span class="ml-2">Volver al listado</span>
+      </a>
+      <button mat-flat-button color="primary" (click)="abrirEditar()">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:pencil-square'"></mat-icon>
+        <span class="ml-2">Editar</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider ></mat-divider>
+
+  <!-- Detalle -->
+  @if (!cargando && data) {
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <!-- Columna izquierda: Datos personales + Registro apilados -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-card rounded-2xl shadow p-4">
+                <h3 class="text-lg font-semibold mb-3">Datos personales</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                <div>
+                    <div class="text-xs text-gray-500">Nombres</div>
+                    <div class="font-medium">{{ nombreCompleto(data.persona) || '-' }}</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500">Documento</div>
+                    <div class="font-medium">
+                    {{ data.persona.tipoDocumento || '-' }} {{ data.persona.numeroDocumento || '' }}
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500">Teléfono</div>
+                    <div class="font-medium">{{ data.persona.telefono || '-' }}</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500">Correo</div>
+                    <div class="font-medium">{{ data.persona.correoElectronico || '-' }}</div>
+                </div>
+
+                <div>
+                    <div class="text-xs text-gray-500">Municipio</div>
+                    <div class="font-medium">{{ data.persona.municipio?.nombreMunicipio || '-' }}</div>
+                </div>
+            <div>
+                <div class="text-xs text-gray-500">Locación</div>
+                <div class="font-medium">{{ data.persona.locacion?.nombreLocacion || '-' }}</div>
+            </div>
+            </div>
+            </div>
+
+            <div class="bg-card rounded-2xl shadow p-4">
+            <h3 class="text-lg font-semibold mb-3">Registro</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs text-gray-500">ID Beneficiario</div>
+                        <div class="font-medium">{{ data.beneficiarioId }}</div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs text-gray-500">Estado</div>
+                        <div class="font-medium">activo</div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs text-gray-500">Inicio</div>
+                        <div class="font-medium">{{ data.fechaInicio | date: 'yyyy-MM-dd' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna derecha: Mapa vertical -->
+        <div class="lg:col-span-2">
+            @if (mapaUrl) {
+            <div class="bg-card rounded-2xl shadow p-0 lg:sticky lg:top-6 overflow-hidden">
+                <div class="p-4">
+                <h3 class="text-lg font-semibold">Ubicación</h3>
+                <div class="text-xs text-gray-500 mt-1">Vista de mapa según latitud/longitud</div>
+                </div>
+                <div class="w-full h-80 lg:h-[600px]">
+                <iframe class="w-full h-full"
+                        style="border:0;"
+                        [src]="mapaUrl"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+  } @else {
+    <div class="bg-card rounded-2xl shadow p-6 text-center text-gray-500">Cargando información...</div>
+  }
+    </div>
+  </mat-drawer-content>
+
+  <mat-drawer class="w-full dark:bg-gray-900 md:w-5/12" [mode]="'over'" [opened]="detailDrawerOpened" [position]="'end'" (backdropClick)="cerrarDrawer()" #detailDrawer>
+    <div class="flex items-center text-white justify-between px-4 py-3 border-b border-black/5 dark:border-white/10 sticky top-0 bg-primary z-10">
+      <div class="text-2xl font-semibold tracking-tight flex items-center gap-2 py-3">
+        <mat-icon
+            class="text-current icon-size-7"
+            [svgIcon]="'heroicons_solid:pencil-square'"
+        ></mat-icon>
+        Editar beneficiario</div>
+      <button mat-icon-button (click)="cerrarDrawer()" aria-label="Cerrar">
+        <mat-icon [svgIcon]="'heroicons_outline:x-mark'" class="text-current icon-size-7"></mat-icon>
+      </button>
+    </div>
+    <div class="p-0">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer>
+</mat-drawer-container>

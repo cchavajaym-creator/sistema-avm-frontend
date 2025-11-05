@@ -1,0 +1,31 @@
+<!-- Button -->
+<button mat-icon-button [matMenuTriggerFor]="userActions">
+    <span class="relative">
+            <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+    </span>
+</button>
+
+<mat-menu [xPosition]="'before'" #userActions="matMenu">
+    <button mat-menu-item>
+        <span class="flex flex-col leading-none">
+            <span>Usuario</span>
+            <span class="mt-1.5 text-md font-medium">{{ user.username }}</span>
+        </span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item [routerLink]="['/perfil', user?.userId]">
+        <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        <span>Perfil</span>
+    </button>
+    <button mat-menu-item (click)="openSettings()">
+        <mat-icon [svgIcon]="'heroicons_outline:cog-8-tooth'"></mat-icon>
+        <span>Ajustes</span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="signOut()">
+        <mat-icon
+            [svgIcon]="'heroicons_outline:arrow-right-on-rectangle'"
+        ></mat-icon>
+        <span>Cerrar Sesión</span>
+    </button>
+</mat-menu>

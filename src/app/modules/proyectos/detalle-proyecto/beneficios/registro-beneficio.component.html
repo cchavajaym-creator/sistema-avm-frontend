@@ -1,0 +1,72 @@
+<div class="flex flex-col w-full">
+  <!-- Header estilo settings -->
+  <div class="flex h-16 min-h-16 items-center bg-primary px-6 text-white">
+    <mat-icon class="text-current icon-size-6" [svgIcon]="isProjectContext ? 'heroicons_outline:link' : 'heroicons_outline:credit-card'"></mat-icon>
+    <div class="ml-3 text-lg font-semibold tracking-tight">{{ isProjectContext ? 'Asociar beneficio' : 'Registrar beneficio' }}</div>
+    <button class="ml-auto" mat-icon-button (click)="cerrar()">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+
+  <div class="p-4 flex flex-col gap-6">
+    <form *ngIf="!isProjectContext" [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre del beneficio</mat-label>
+        <input matInput formControlName="nombreBeneficio" />
+        <mat-error *ngIf="form.get('nombreBeneficio')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Unidad de medida</mat-label>
+      <input matInput placeholder="Ej.: GTQ" formControlName="unidadMedida" />
+      <mat-error *ngIf="form.get('unidadMedida')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="md:col-span-2">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput rows="3" class="w-full" placeholder="Descripción" formControlName="descripcion"></textarea>
+    </mat-form-field>
+  </form>
+
+    <div *ngIf="!isProjectContext" class="flex justify-end gap-2">
+      <button mat-stroked-button color="warn" type="button" (click)="cerrar()">Cancelar</button>
+      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando || form.invalid">Guardar</button>
+    </div>
+
+    <!-- Listado de beneficios existentes -->
+    <div *ngIf="isProjectContext">
+      <div class="text-md font-semibold mb-3">Beneficios existentes</div>
+      <div class="bg-card rounded-2xl border overflow-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-600 border-b">
+              <th class="py-2 px-3">Nombre</th>
+              <th class="py-2 px-3">Descripción</th>
+              <th class="py-2 px-3">Unidad</th>
+              <th class="py-2 px-3 w-40"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of beneficios" class="border-b last:border-b-0">
+              <td class="py-2 px-3 font-medium">{{ b.nombreBeneficio }}</td>
+              <td class="py-2 px-3">{{ b.descripcion || '-' }}</td>
+              <td class="py-2 px-3">{{ b.unidadMedida }}</td>
+              <td class="py-2 px-3 text-right">
+                <button mat-stroked-button color="primary" (click)="asociarABeneficio(b.beneficioId)" [disabled]="asociandoId === b.beneficioId">
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:link'"></mat-icon>
+                  <span class="ml-2">Asociar al proyecto</span>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!cargandoBeneficios && (beneficios?.length || 0) === 0">
+              <td class="py-3 text-center text-hint" colspan="4">No hay beneficios creados.</td>
+            </tr>
+            <tr *ngIf="cargandoBeneficios">
+              <td class="py-3 text-center text-hint" colspan="4">Cargando…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

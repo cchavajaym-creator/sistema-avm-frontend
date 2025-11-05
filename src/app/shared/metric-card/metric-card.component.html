@@ -1,0 +1,25 @@
+<div class="flex flex-col rounded-2xl p-4 w-full"
+     [ngClass]="wrapperClass || 'bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400 w-full'">
+  <div class="flex items-start justify-between">
+    <div class="truncate text-lg font-medium leading-6 tracking-tight">
+      {{ title }}
+    </div>
+    <div>
+      <ng-container *ngIf="svgIcon; else ligature">
+        <mat-icon class="icon-size-5" [svgIcon]="svgIcon"></mat-icon>
+      </ng-container>
+      <ng-template #ligature>
+        <mat-icon class="icon-size-5">{{ icon }}</mat-icon>
+      </ng-template>
+    </div>
+  </div>
+  <div class="mt-2 flex flex-col items-center">
+    <div class="text-5xl font-semibold leading-none tracking-tight sm:text-7xl">
+      {{ value }}
+    </div>
+    <div class="mt-1 text-sm font-medium sm:text-lg">
+      {{ subtitle }}
+    </div>
+  </div>
+</div>
+

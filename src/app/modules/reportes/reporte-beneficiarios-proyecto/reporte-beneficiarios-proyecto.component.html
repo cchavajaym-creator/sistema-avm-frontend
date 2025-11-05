@@ -1,0 +1,149 @@
+<div class="flex flex-col gap-4 p-4 w-full">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-semibold">Reporte: Beneficiarios por Proyecto</h2>
+    <div class="flex gap-2">
+      <button mat-flat-button color="primary" (click)="aplicarFiltros()">
+        <mat-icon>search</mat-icon>
+        <span class="ml-2">Buscar</span>
+      </button>
+      <button mat-stroked-button color="primary" (click)="exportarXLSX()">
+        <mat-icon>download</mat-icon>
+        <span class="ml-2">Exportar XLSX</span>
+      </button>
+      <button mat-stroked-button (click)="limpiarFiltros()">
+        <mat-icon>filter_alt_off</mat-icon>
+        <span class="ml-2">Limpiar</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Proyecto</mat-label>
+      <mat-select [value]="proyectoId()" (selectionChange)="proyectoId.set($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option *ngFor="let p of proyectos" [value]="p.proyectoId">{{ p.nombreProyecto }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado en proyecto</mat-label>
+      <mat-select [value]="estadoEnProyecto()" (selectionChange)="estadoEnProyecto.set($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option [value]="1">Activo</mat-option>
+        <mat-option [value]="2">Inactivo</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Departamento</mat-label>
+      <mat-select [value]="departamentoId()" (selectionChange)="setDepartamento($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option *ngFor="let d of departamentos" [value]="d.departamentoId">{{ d.nombreDepartamento }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Municipio</mat-label>
+      <mat-select [disabled]="!departamentoId()" [value]="municipioId()" (selectionChange)="setMunicipio($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option *ngFor="let m of municipios" [value]="m.municipioId">{{ m.nombreMunicipio }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado beneficiario</mat-label>
+      <mat-select [value]="estadoBeneficiario()" (selectionChange)="estadoBeneficiario.set($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option [value]="1">Activo</mat-option>
+        <mat-option [value]="2">Inactivo</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mayor de edad</mat-label>
+      <mat-select [value]="mayorEdad()" (selectionChange)="mayorEdad.set($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option [value]="true">Sí</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="md:col-span-2">
+      <mat-label>Buscar</mat-label>
+      <input matInput placeholder="Nombre, municipio o departamento" [value]="buscar()" (input)="buscar.set($any($event.target).value)" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="overflow-auto rounded border border-gray-200">
+    <table mat-table [dataSource]="filtrados()" class="min-w-full" matSort (matSortChange)="onSortChange($event)">
+
+      <ng-container matColumnDef="nombreProyecto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nombreProyecto">Proyecto</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreProyecto }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombreCompleto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nombreCompleto">Beneficiario</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreCompleto }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="genero">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="genero">Género</th>
+        <td mat-cell *matCellDef="let row">{{ generoLabel(row.genero) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombreDepartamento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nombreDepartamento">Departamento</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreDepartamento }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombreMunicipio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nombreMunicipio">Municipio</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreMunicipio }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="estadoBeneficiario">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="estadoBeneficiario">Estado Beneficiario</th>
+        <td mat-cell *matCellDef="let row">
+          <estado-chip [estado]="row.estadoBeneficiario"></estado-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estadoEnProyecto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="estadoEnProyecto">Estado en Proyecto</th>
+        <td mat-cell *matCellDef="let row">
+          <estado-chip [estado]="row.estadoEnProyecto"></estado-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaIncorporacionProyecto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="fechaIncorporacionProyecto">Fecha Incorporación</th>
+        <td mat-cell *matCellDef="let row">{{ row.fechaIncorporacionProyecto | date: 'yyyy-MM-dd' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="edad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="edad">Edad</th>
+        <td mat-cell *matCellDef="let row">{{ row.edad ?? '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="esMayorEdad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="esMayorEdad">Mayor de edad</th>
+        <td mat-cell *matCellDef="let row">{{ row.esMayorEdad ? 'Sí' : 'No' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    [length]="total()"
+    [pageIndex]="page()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPage($event)"
+    class="mt-2"
+  />
+</div>

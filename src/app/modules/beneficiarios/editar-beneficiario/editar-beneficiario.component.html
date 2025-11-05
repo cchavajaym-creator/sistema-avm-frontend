@@ -1,0 +1,113 @@
+<div class="p-6 w-full">
+
+  <form [formGroup]="form" class="bg-card rounded-2xl px-4">
+    <mat-horizontal-stepper [linear]="false">
+        <mat-step label="Datos personales">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Primer nombre</mat-label>
+                    <input matInput formControlName="primerNombre" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Segundo nombre</mat-label>
+                    <input matInput formControlName="segundoNombre" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Tercer nombre</mat-label>
+                    <input matInput formControlName="tercerNombre" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Primer apellido</mat-label>
+                    <input matInput formControlName="primerApellido" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Segundo apellido</mat-label>
+                    <input matInput formControlName="segundoApellido" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de nacimiento</mat-label>
+                    <input matInput type="date" formControlName="fechaNacimiento" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Género</mat-label>
+                    <mat-select formControlName="genero">
+                        <mat-option *ngFor="let g of generos" [value]="g.value">{{ g.label }}</mat-option>
+                    </mat-select></mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Teléfono</mat-label>
+                    <input matInput formControlName="telefono" />
+                </mat-form-field>
+
+            </div>
+
+            <div class="mt-4 flex justify-end gap-2 border-t-2 py-6">
+                <button mat-stroked-button color="warn" type="button" (click)="cerrar()">Cancelar</button>
+                <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+            </div>
+
+        </mat-step>
+
+        <mat-step label="Documento">
+            <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-4">
+                <mat-form-field appearance="outline"><mat-label>Tipo de documento</mat-label>
+                    <mat-select formControlName="tipoDocumento">
+                        <mat-option value="DPI">DPI</mat-option>
+                        <mat-option value="PASAPORTE">Pasaporte</mat-option>
+                        <mat-option value="OTRO">Otro</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Número de documento</mat-label>
+                    <input matInput formControlName="numeroDocumento" />
+                </mat-form-field>
+
+                <mat-form-field class="md:col-span-2" appearance="outline">
+                    <mat-label>Dirección</mat-label>
+                    <input matInput formControlName="direccionDetalle" />
+                </mat-form-field>
+            </div>
+            <div class="mt-4 flex justify-between gap-2 border-t-2 py-6">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                <div class="flex gap-2">
+                    <button mat-stroked-button color="warn" type="button" (click)="cerrar()">Cancelar</button>
+                    <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+                </div>
+            </div>
+        </mat-step>
+
+        <mat-step label="Ubicación">
+            <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departamentoId" (selectionChange)="onDepartamentoChange($event.value)"><mat-option *ngFor="let d of departamentos" [value]="d.departamentoId">{{ d.nombreDepartamento }}</mat-option></mat-select></mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Municipio</mat-label><mat-select formControlName="municipioId" (selectionChange)="onMunicipioChange($event.value)"><mat-option *ngFor="let m of municipios" [value]="m.municipioId">{{ m.nombreMunicipio }}</mat-option></mat-select></mat-form-field>
+            <mat-form-field appearance="outline" class="col-span-2">
+                <mat-label>Aldea / Sector</mat-label>
+                <mat-select formControlName="locacionId" (selectionChange)="onLocacionSelection($event.value)"><mat-option *ngFor="let l of locaciones" [value]="l.locacionId">{{ l.nombreLocacion }}</mat-option><mat-option [value]="'AGREGAR'">Agregar nueva locación…</mat-option></mat-select></mat-form-field>
+            <div class="col-span-full flex items-center gap-3">
+                <button mat-stroked-button color="primary" type="button" (click)="obtenerUbicacion()"><mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:map-pin'"></mat-icon><span class="ml-2">Usar mi ubicación</span></button>
+            </div>
+            <div class="col-span-full">
+                <div class="rounded-2xl overflow-hidden border" *ngIf="mapUrl; else noMapTpl">
+                <iframe [src]="mapUrl" class="w-full" style="height: 320px; border: 0" loading="lazy"></iframe>
+                </div>
+                <ng-template #noMapTpl>
+                <div class="p-4 text-sm text-secondary">Ingresa latitud y longitud válidas para previsualizar el mapa.</div>
+                </ng-template>
+            </div>
+            </div>
+
+            <div class="mt-6 flex justify-between gap-2 border-t-2 py-6">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                <div class="flex gap-2">
+                    <button mat-stroked-button color="warn" type="button" (click)="cerrar()">Cancelar</button>
+                    <button mat-flat-button color="primary" type="button" (click)="guardar()" [disabled]="guardando || form.invalid">Guardar</button>
+                </div>
+            </div>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+  </form>
+</div>

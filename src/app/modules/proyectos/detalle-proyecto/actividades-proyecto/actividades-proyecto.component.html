@@ -1,0 +1,101 @@
+<div class="flex flex-col flex-auto min-h-0 h-full w-full px-0 md:px-6">
+    <div class="flex flex-col flex-auto min-h-0">
+        <!-- Header -->
+        <div
+            class="flex flex-col items-start px-6 py-4 sm:flex-row sm:items-center sm:justify-between md:px-8"
+        >
+            <!-- Title -->
+            <div>
+                <div class="text-xl font-semibold leading-none">
+                    Listado de actividades
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="mt-4 sm:mt-0">
+                <button
+                    class="ml-3"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="abrirAgregarActividad()"
+                >
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-2 mr-1">Agregar Actividad</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- actividades list -->
+        <div class="flex-auto min-h-0 overflow-auto">
+            @if(actividades$ | async; as actividades) {
+                <div
+                    class="divide-y"
+                    cdkDropList
+                    [cdkDropListData]="actividades"
+                    (cdkDropListDropped)="dropped($event, actividades)"
+                >
+                    @for (
+                        actividad of actividades;
+                        track trackByFn($index, actividad);
+                    ) {
+                        <div
+                            [id]="'task-' + actividad.actividadId"
+                            class="group w-full select-none dark:hover:bg-hover hover:bg-gray-100 h-16 border-y"
+                            cdkDrag
+                            [cdkDragLockAxis]="'y'"
+                        >
+                            <div class="flex h-0 w-0 flex-0" *cdkDragPreview></div>
+
+                            <!-- Task content -->
+                            <div class="relative flex h-full items-center pl-10">
+                                <!-- Drag handle -->
+                                <div
+                                    class="absolute inset-y-0 left-0 flex w-8 cursor-move items-center justify-center md:hidden md:group-hover:flex"
+                                    cdkDragHandle
+                                >
+                                    <mat-icon class="text-lg icon-size-5" [svgIcon]="'heroicons_solid:bars-3'"></mat-icon>
+                                </div>
+
+                                <!-- Task link -->
+                                <a
+                                    class="flex h-full min-w-0 flex-auto items-center pr-7"
+                                    [routerLink]="['actividades', actividad.actividadId, 'editar']"
+                                >
+                                        <div class="mr-2 flex-auto truncate flex items-center gap-2">
+                                            <span class="truncate">{{ actividad.nombreActividad }}</span>
+                                            <app-tag [label]="actividad.tipoActividad | titlecase" [color]="tipoColor(actividad.tipoActividad)" size="sm" />
+                                        </div>
+                                    <div class="mr-3 h-4 w-4"></div>
+                                    <div class="text-secondary whitespace-nowrap text-sm">
+                                        {{ actividad.fechaActividad | date: 'yyyy-MM-dd' }}
+                                    </div>
+                                </a>
+
+                                <!-- Botón para ver detalle de la actividad -->
+                                <a
+                                    mat-stroked-button
+                                    color="primary"
+                                    class="mr-4"
+                                    [routerLink]="['actividades', actividad.actividadId ]"
+                                    matTooltip="Ver detalle de la actividad"
+                                >
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                                    <span class="ml-2">Ver detalle</span>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+                    <mat-icon
+                        class="icon-size-24"
+                        [svgIcon]="'heroicons_outline:clipboard-document-list'"
+                    ></mat-icon>
+                    <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">
+                        Agregar Actividad al Proyecto!
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

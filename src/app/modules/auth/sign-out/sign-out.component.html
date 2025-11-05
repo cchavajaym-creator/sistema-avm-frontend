@@ -1,0 +1,29 @@
+<div class="flex min-h-screen min-w-0 flex-auto flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div class="w-full max-w-md rounded-2xl bg-card p-8 shadow border border-black/5 dark:border-white/5">
+        <!-- Logo -->
+        <div class="flex items-center justify-center">
+            <img src="assets/logo/logo-avm-1.png" alt="AVM" class="h-28 w-auto" />
+        </div>
+
+        <!-- Title -->
+        <div class="mt-4 text-center text-2xl font-bold leading-tight tracking-tight">
+            Has cerrado sesión
+        </div>
+
+        <div class="mt-1 text-center text-sm text-secondary">
+            @if (countdown > 0) {
+                Redirigiendo en {{ countdown | i18nPlural: countdownMapping }}
+            }
+            @if (countdown === 0) {
+                Redirigiendo...
+            }
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex items-center justify-center">
+            <button mat-stroked-button [color]="'primary'" [routerLink]="['/sign-in']">
+                Ir al inicio de sesión
+            </button>
+        </div>
+    </div>
+</div>

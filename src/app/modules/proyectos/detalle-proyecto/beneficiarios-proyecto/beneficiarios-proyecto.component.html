@@ -1,0 +1,50 @@
+<div class="flex flex-col gap-4 w-full px-0 md:px-6">
+  <div class="flex items-center justify-between gap-2 flex-wrap">
+    <h3 class="text-xl font-bold">Beneficiarios del proyecto</h3>
+    <div class="flex items-center gap-2">
+      <input type="file" accept=".csv,.xls,.xlsx" class="hidden" #fileInput (change)="onFileSelected($event)" />
+      <button mat-stroked-button color="primary" (click)="abrirAgregarBeneficiario()">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+        <span class="ml-2">Agregar beneficiario</span>
+      </button>
+      <button mat-flat-button color="accent" (click)="fileInput.click()">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-up-tray'"></mat-icon>
+        <span class="ml-2">Importar archivo</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="bg-card p-4 overflow-auto w-full">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-2 pr-4">ID</th>
+          <th class="py-2 pr-4">Nombre</th>
+          <th class="py-2 pr-4">Municipio</th>
+          <th class="py-2 pr-4">Fecha Incorporación</th>
+          <th class="py-2 pr-4">Estado</th>
+          <th class="py-2 pr-4">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of beneficiarios" class="border-b last:border-b-0">
+          <td class="py-2 pr-4">{{ b.beneficiarioId }}</td>
+          <td class="py-2 pr-4">{{ nombreCompleto(b) }}</td>
+          <td class="py-2 pr-4">{{ b.persona.municipio?.nombreMunicipio || '-' }}</td>
+          <td class="py-2 pr-4">{{ b.fechaIncorporacion | date:'yyyy-MM-dd' }}</td>
+          <td class="py-2 pr-4">
+            <app-tag [label]="estadoLabel(b.estadoId)" [color]="estadoColor(b.estadoId)"></app-tag>
+          </td>
+          <td class="py-2 pr-4">
+            <button mat-icon-button color="warn" (click)="confirmarEliminar(b)">
+              <mat-icon [svgIcon]="'heroicons_outline:trash'" class="text-red-600"></mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="!cargando && beneficiarios.length === 0">
+          <td class="py-3 text-center text-hint" colspan="5">Sin beneficiarios asociados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

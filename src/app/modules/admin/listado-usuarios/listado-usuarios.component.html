@@ -1,0 +1,75 @@
+<div class="flex flex-col w-full p-4 bg-card dark:bg-default">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold">Usuarios</h2>
+        <button class="px-3 py-1.5 rounded bg-primary-600 text-white hover:bg-primary-700"
+                (click)="agregarUsuario()">
+            Agregar Usuario
+        </button>
+    </div>
+
+    <ng-container *ngIf="usuarios$ | async as usuarios; else empty">
+
+    <div class="overflow-x-auto border rounded">
+        <table class="min-w-full divide-y">
+        <thead class="bg-card">
+            <tr>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">#</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Usuario</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Correo</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Fecha registro</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Estado</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Rol</th>
+            <th class="px-4 py-3 text-left font-medium text-primary uppercase tracking-wider">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="bg-card divide-y">
+            <tr *ngFor="let u of usuarios; let i = index" class="hover:bg-gray-50 dark:hover:bg-slate-600">
+                <td class="px-4 py-2 text-gray-700 dark:text-white">{{ i + 1 }}</td>
+                <td class="px-4 py-2 text-gray-900 dark:text-white">{{ u.nombreUsuario }}</td>
+                <td class="px-4 py-2 text-gray-700 dark:text-white">{{ u.correoElectronico }}</td>
+                <td class="px-4 py-2 text-gray-700 dark:text-white">{{ u.fechaRegistro | date: 'short' }}</td>
+                <td class="px-4 py-2">
+                <span class="px-2 py-0.5 rounded-full font-medium"
+                    [ngClass]="{
+                        'bg-green-100 text-green-800': (u?.estado?.tipoEstado?.toLowerCase?.() || '') === 'activo',
+                        'bg-red-100 text-red-800': (u?.estado?.tipoEstado?.toLowerCase?.() || '') === 'inactivo',
+                        'bg-gray-100 text-gray-800': ['activo','inactivo'].indexOf((u?.estado?.tipoEstado?.toLowerCase?.() || '')) === -1
+                    }">
+                {{ u?.estado?.nombre || u?.estado?.descripcion || '—' }}
+                </span>
+            </td>
+            <td class="px-4 py-2">
+                <span class="px-2 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
+                {{ u?.rol?.nombreRol || '—' }}
+                </span>
+            </td>
+            <td class="px-4 py-2">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Acciones" (click)="$event.stopPropagation()">
+                    <mat-icon svgIcon="heroicons_outline:ellipsis-vertical"></mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="irAlPerfil(u.usuarioId)">
+                        <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                        <span>Ver perfil</span>
+                    </button>
+                    <button mat-menu-item (click)="editarRolUsuario(u)">
+                        <mat-icon svgIcon="heroicons_outline:lock-closed"></mat-icon>
+                        <span>Editar rol</span>
+                    </button>
+                </mat-menu>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!usuarios.length" class="p-6 text-center text-gray-500">
+        No hay usuarios para mostrar.
+    </div>
+    </ng-container>
+
+    <ng-template #empty>
+    <div class="p-6 text-center text-gray-500">No hay usuarios para mostrar.</div>
+    </ng-template>
+
+</div>

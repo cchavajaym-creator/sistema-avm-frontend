@@ -1,0 +1,14 @@
+<div class="p-4">
+  <div class="flex items-center justify-between mb-2">
+    <h3 class="text-lg font-bold">{{ data.title || 'Confirmación' }}</h3>
+    <button mat-icon-button (click)="cancel()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+  <div class="text-sm whitespace-pre-line">{{ data.message || '¿Deseas continuar?' }}</div>
+  <div class="mt-4 flex justify-end gap-2">
+    <button mat-stroked-button color="warn" (click)="cancel()">{{ data.cancelText || 'Cancelar' }}</button>
+    <button mat-flat-button color="primary" (click)="confirm()">{{ data.confirmText || 'Confirmar' }}</button>
+  </div>
+</div>
+

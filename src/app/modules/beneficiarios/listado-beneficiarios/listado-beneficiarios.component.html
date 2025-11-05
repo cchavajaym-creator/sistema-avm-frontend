@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-6 w-full px-6 md:px-10 py-6 bg-card">
+    <!-- Header -->
+    <div class="flex items-start justify-between">
+        <div>
+            <div class="text-sm text-secondary">Catálogo</div>
+            <h2 class="mt-1 text-3xl font-extrabold tracking-tight">Beneficiarios</h2>
+        </div>
+        <div class="flex items-center gap-2">
+            <a mat-stroked-button [color]="'primary'" [routerLink]="['/registro-beneficiario']">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                <span class="ml-2">Nuevo</span>
+            </a>
+            <button mat-stroked-button color="primary" (click)="refrescar()" [disabled]="cargando">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-path'"></mat-icon>
+                <span class="ml-2">Refrescar</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-card rounded-2xl shadow p-4 border border-black/5 dark:border-white/5 overflow-auto w-full">
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="text-left text-secondary border-b">
+                    <th class="py-3 pr-4">ID</th>
+                    <th class="py-3 pr-4">Nombre</th>
+                    <th class="py-3 pr-4">Documento</th>
+                    <th class="py-3 pr-4">Teléfono</th>
+                    <th class="py-3 pr-4">Municipio</th>
+                    <th class="py-3 pr-4">Locación</th>
+                    <th class="py-3 pr-4">Estado</th>
+                    <th class="py-3 pr-4">Inicio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let b of beneficiarios" class="border-b last:border-b-0 hover:bg-gray-50 dark:hover:bg-hover">
+                    <td class="py-3 pr-4">{{ b.beneficiarioId }}</td>
+                    <td class="py-3 pr-4">
+                        <a class="text-primary hover:underline" [routerLink]="['/beneficiarios/perfil', b.beneficiarioId]">
+                            {{ nombreCompleto(b) }}
+                        </a>
+                        <div class="text-xs text-secondary">{{ b.persona?.correoElectronico || '' }}</div>
+                    </td>
+                    <td class="py-3 pr-4">{{ b.persona.tipoDocumento }} {{ b.persona.numeroDocumento }}</td>
+                    <td class="py-3 pr-4">{{ b.persona.telefono || '-' }}</td>
+                    <td class="py-3 pr-4">{{ b.persona.municipio?.nombreMunicipio || '-' }}</td>
+                    <td class="py-3 pr-4">{{ b.persona.locacion?.nombreLocacion || '-' }}</td>
+                    <td class="py-3 pr-4">
+                        <app-tag [label]="estadoLabel(b.estadoId)" [color]="estadoColor(b.estadoId)"></app-tag>
+                    </td>
+                    <td class="py-3 pr-4">{{ b.fechaInicio | date:'dd/MM/yyyy' }}</td>
+                </tr>
+                <tr *ngIf="!cargando && beneficiarios.length === 0">
+                    <td class="py-6 text-center text-hint" colspan="8">Sin beneficiarios registrados.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <mat-divider class="my-3"></mat-divider>
+
+        <div class="w-full flex justify-end">
+            <mat-paginator
+                [length]="total"
+                [pageSize]="pageSize"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="pageSizeOptions"
+                (page)="pageChange($event)">
+            </mat-paginator>
+        </div>
+    </div>
+
+</div>

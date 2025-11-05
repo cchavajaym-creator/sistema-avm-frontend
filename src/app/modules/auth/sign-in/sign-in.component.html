@@ -1,0 +1,138 @@
+<div class="flex min-h-screen min-w-0 flex-auto flex-col sm:flex-row bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <!-- Left hero (hidden on small) -->
+    <div class="relative hidden flex-1 overflow-hidden sm:flex sm:flex-col sm:justify-center">
+        <!-- Background image -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/imagen-avm.jpeg');"></div>
+        <!-- Overlay for readability -->
+        <div class="absolute inset-0 bg-black/40"></div>
+
+        <div class="relative z-10 p-12 text-white">
+            <div class="max-w-md">
+                <img src="assets/logo/logo-avm-1.png" alt="AVM" class="h-14 w-auto mb-6 drop-shadow-md" />
+                <div class="text-3xl font-extrabold leading-tight">Bienvenido/a</div>
+                <div class="mt-2 text-base/relaxed text-white/90">
+                    Sistema de gestión de proyectos de la Asociación Vivamos Mejor.
+                </div>
+                <ul class="mt-6 space-y-2 text-white/90">
+                    <li class="flex items-start gap-2">
+                        <mat-icon class="icon-size-5 text-white/90" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                        <span>Administra proyectos y actividades</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <mat-icon class="icon-size-5 text-white/90" [svgIcon]="'heroicons_outline:users'"></mat-icon>
+                        <span>Gestiona beneficiarios y usuarios</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right form -->
+    <div class="flex-1 w-full px-6 py-10 sm:flex sm:items-center sm:justify-center">
+        <div class="w-full max-w-md rounded-2xl bg-card p-8 shadow md:p-10 border border-black/5 dark:border-white/5">
+            <!-- Logo -->
+            <div class="flex items-center justify-center">
+                <img src="assets/logo/logo-avm-1.png" alt="AVM" class="h-28 w-auto" />
+            </div>
+
+            <!-- Title -->
+            <div class="mt-6 text-xl font-semibold leading-tight text-center sm:text-left">Iniciar sesión</div>
+
+
+            <!-- Alert -->
+            @if (showAlert) {
+                <fuse-alert
+                    class="mt-8"
+                    [appearance]="'outline'"
+                    [showIcon]="false"
+                    [type]="alert.type"
+                    [@shake]="alert.type === 'error'"
+                >
+                    {{ alert.message }}
+                </fuse-alert>
+            }
+
+            <!-- Sign in form -->
+            <form class="mt-6" [formGroup]="signInForm" #signInNgForm="ngForm">
+                <!-- Email field -->
+                <mat-form-field class="w-full">
+                    <mat-label>Correo electrónico</mat-label>
+                    <mat-icon matPrefix [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
+                    <input id="email" matInput [formControlName]="'correoElectronico'" />
+                    @if (signInForm.get('correoElectronico').hasError('required')) {
+                        <mat-error> El correo es obligatorio </mat-error>
+                    }
+                    @if (signInForm.get('correoElectronico').hasError('email')) {
+                        <mat-error> Ingresa un correo válido </mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Password field -->
+                <mat-form-field class="w-full mt-2">
+                    <mat-label>Contraseña</mat-label>
+                    <mat-icon matPrefix [svgIcon]="'heroicons_outline:key'"></mat-icon>
+                    <input
+                        id="password"
+                        matInput
+                        type="password"
+                        [formControlName]="'contrasena'"
+                        #passwordField
+                    />
+                    <button
+                        mat-icon-button
+                        type="button"
+                        (click)="
+                            passwordField.type === 'password'
+                                ? (passwordField.type = 'text')
+                                : (passwordField.type = 'password')
+                        "
+                        matSuffix
+                    >
+                        @if (passwordField.type === 'password') {
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:eye'"
+                            ></mat-icon>
+                        }
+                        @if (passwordField.type === 'text') {
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:eye-slash'"
+                            ></mat-icon>
+                        }
+                    </button>
+                    <mat-error> La contraseña es obligatoria </mat-error>
+                </mat-form-field>
+
+                <!-- Submit button -->
+                <button
+                    class="fuse-mat-button-large mt-6 w-full"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [disabled]="signInForm.disabled"
+                    (click)="signIn()"
+                >
+                    @if (!signInForm.disabled) {
+                        <span> Iniciar Sesión </span>
+                    }
+                    @if (signInForm.disabled) {
+                        <mat-progress-spinner
+                            [diameter]="24"
+                            [mode]="'indeterminate'"
+                        ></mat-progress-spinner>
+                    }
+                </button>
+
+                <div class="mt-4 text-center text-sm text-secondary">
+                    Acceso restringido al personal autorizado de AVM.
+                </div>
+
+                <!-- Logo -->
+                <div class="flex items-center justify-center my-4">
+                    <img src="assets/logo-umg.jpg" alt="AVM" class="h-28 w-auto" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

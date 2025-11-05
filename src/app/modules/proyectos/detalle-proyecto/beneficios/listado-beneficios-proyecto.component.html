@@ -1,0 +1,42 @@
+<div class="flex flex-col gap-3">
+  <div class="flex flex-col md:flex-row items-center gap-3 w-full ">
+    <mat-form-field appearance="outline" class="w-full md:w-8-12">
+      <mat-label>Buscar beneficio</mat-label>
+      <input matInput [(ngModel)]="q" (keyup.enter)="cargar()" placeholder="Nombre contiene…" />
+    </mat-form-field>
+    <div class="flex flex-row items-center flex-1 gap-3">
+        <button mat-stroked-button color="primary" (click)="cargar()">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+        <span class="ml-2">Buscar</span>
+        </button>
+        <button mat-button (click)="limpiar()">Limpiar</button>
+    </div>
+
+  </div>
+
+  <div class="bg-card rounded-2xl border overflow-auto">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-2 px-3">Nombre</th>
+          <th class="py-2 px-3">Descripción</th>
+          <th class="py-2 px-3">Unidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of beneficios" class="border-b last:border-b-0">
+          <td class="py-2 px-3 font-medium">{{ b.nombreBeneficio }}</td>
+          <td class="py-2 px-3">{{ b.descripcion || '-' }}</td>
+          <td class="py-2 px-3">{{ b.unidadMedida }}</td>
+        </tr>
+        <tr *ngIf="!cargando && (beneficios?.length || 0) === 0">
+          <td class="py-4 text-center text-hint" colspan="3">No hay beneficios asociados.</td>
+        </tr>
+        <tr *ngIf="cargando">
+          <td class="py-4 text-center text-hint" colspan="3">Cargando…</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

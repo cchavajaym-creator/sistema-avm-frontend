@@ -1,0 +1,46 @@
+<div class="p-4 w-full">
+  <div class="flex items-center justify-between mb-2">
+    <h3 class="text-lg font-bold">Detalle de la actividad</h3>
+    <button mat-icon-button (click)="cerrar()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+    <div>
+      <div class="text-gray-500">ID</div>
+      <div class="font-medium">{{ data.actividad.actividadId }}</div>
+    </div>
+    <div>
+      <div class="text-gray-500">Proyecto ID</div>
+      <div class="font-medium">{{ data.actividad.proyectoId }}</div>
+    </div>
+    <div class="md:col-span-2">
+      <div class="text-gray-500">Nombre</div>
+      <div class="font-medium">{{ data.actividad.nombreActividad }}</div>
+    </div>
+    <div>
+      <div class="text-gray-500">Tipo</div>
+      <div class="font-medium">{{ data.actividad.tipoActividad }}</div>
+    </div>
+    <div>
+      <div class="text-gray-500">Fecha</div>
+      <div class="font-medium">{{ data.actividad.fechaActividad | date:'yyyy-MM-dd' }}</div>
+    </div>
+    <div class="md:col-span-2">
+      <div class="text-gray-500">Lugar</div>
+      <div class="font-medium">{{ data.actividad.lugar || '-' }}</div>
+    </div>
+    <div class="md:col-span-2">
+      <div class="text-gray-500">Descripción</div>
+      <div class="font-medium whitespace-pre-line">{{ data.actividad.descripcion || '-' }}</div>
+    </div>
+  </div>
+
+  <div class="mt-4 flex justify-end">
+    <button mat-flat-button color="primary" (click)="cerrar()">
+      Cerrar
+    </button>
+  </div>
+</div>
+
